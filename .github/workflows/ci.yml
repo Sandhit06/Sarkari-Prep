@@ -1,0 +1,20 @@
+name: SarkariPrep CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate Seed JSON
+        run: python3 -m json.tool data/exams-seed.json > /dev/null
+      - name: Check Python Parser Syntax
+        run: python3 -m py_compile apps/parser/main.py apps/parser/structurer.py

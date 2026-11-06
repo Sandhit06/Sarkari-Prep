@@ -1,0 +1,523 @@
+// SarkariPrep Core Data Model (§7 of Architecture Spec)
+// PostgreSQL + Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ExamCategory {
+  SSC
+  BANKING
+  RAILWAYS
+  UPSC
+  DEFENCE
+  TEACHING
+  STATE_PSC
+  INSURANCE
+  POLICE
+  PSU
+  ENGINEERING
+}
+
+enum PaperSourceType {
+  OFFICIAL
+  MEMORY_BASED
+  USER_UPLOADED
+}
+
+enum VerificationStatus {
+  DRAFT
+  NEEDS_REVIEW
+  IN_REVIEW
+  PUBLISHED
+  REJECTED
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTI_CHOICE
+  NUMERICAL
+}
+
+enum DifficultyLevel {
+  EASY
+  MODERATE
+  HARD
+}
+
+enum ParsingStatus {
+  QUEUED
+  EXTRACTING_TEXT
+  IDENTIFYING_QUESTIONS
+  STRUCTURING_OPTIONS
+  NEEDS_REVIEW
+  COMPLETED
+  FAILED
+}
+
+enum ProctorEventType {
+  TAB_SWITCH
+  WINDOW_BLUR
+  FULLSCREEN_EXIT
+  PASTE_ATTEMPT
+  COPY_ATTEMPT
+  RIGHT_CLICK
+  DEVTOOLS_OPEN
+}
+
+enum UserRole {
+  ASPIRANT
+  CONTRIBUTOR
+  MODERATOR
+  ADMIN
+}
+
+enum IngestionSourceKind {
+  OFFICIAL_HTML
+  RSS_JSON
+  JSON_API
+  SITEMAP
+  MANUAL
+}
+
+enum IngestionRunStatus {
+  QUEUED
+  FETCHING
+  EXTRACTING
+  NEEDS_REVIEW
+  COMPLETED
+  FAILED
+  SKIPPED
+}
+
+enum KnowledgeKind {
+  EXAM_UPDATE
+  NOTIFICATION
+  SYLLABUS
+  QUESTION
+  LEARNING_TRICK
+  STRATEGY
+}
+
+enum KnowledgeStatus {
+  DRAFT
+  APPROVED
+  PUBLISHED
+  REJECTED
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  shortName   String
+  description String?
+  websiteUrl  String?
+  isStateBody Boolean  @default(false)
+  stateCode   String? // e.g., "WB", "UP", "BR", "MP", "RJ"
+  exams       Exam[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Exam {
+  id                  String       @id @default(cuid())
+  slug                String       @unique
+  name                String
+  shortName           String
+  category            ExamCategory
+  organizationId      String
+  organization        Organization @relation(fields: [organizationId], references: [id])
+  eligibilitySummary  String
+  ageLimit            String
+  qualification       String
+  hasSectionalTiming  Boolean      @default(false)
+  calculatorAllowed   Boolean      @default(false)
+  defaultDurationMins Int          @default(60)
+  defaultTotalMarks   Float        @default(200)
+  defaultNegativeMark Float        @default(0.50)
+  languagesSupported  String[]     @default(["en", "hi"])
+  officialUrl         String?
+  cycles              ExamCycle[]
+  syllabi             Syllabus[]
+  prepGuides          PrepGuide[]
+  papers              Paper[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([category])
+}
+
+model ExamCycle {
+  id               String    @id @default(cuid())
+  examId           String
+  exam             Exam      @relation(fields: [examId], references: [id], onDelete: Cascade)
+  year             Int
+  notificationDate DateTime?
+  applicationStart DateTime?
+  applicationEnd   DateTime?
+  prelimsDate      DateTime?
+  mainsDate        DateTime?
+  vacanciesCount   Int?
+  officialPdfUrl   String?
+  eligibilityNotes String?
+  papers           Paper[]
+  createdAt        DateTime  @default(now())
+
+  @@unique([examId, year])
+}
+
+model Syllabus {
+  id          String   @id @default(cuid())
+  examId      String
+  exam        Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  tierOrStage String   @default("Tier I / Prelims")
+  subjectName String
+  topicTree   Json // Structured array of { topic, subtopics[], weightageQuestions }
+  updatedAt   DateTime @updatedAt
+}
+
+model PrepGuide {
+  id               String   @id @default(cuid())
+  examId           String
+  exam             Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  title            String
+  strategyMarkdown String   @db.Text
+  studyPlanWeeks   Json // Structured weekly plan
+  booklist         Json // Array of { title, author, subject, freeResourceUrl }
+  updatedAt        DateTime @updatedAt
+}
+
+model Paper {
+  id                 String             @id @default(cuid())
+  slug               String             @unique
+  title              String
+  examId             String
+  exam               Exam               @relation(fields: [examId], references: [id])
+  examCycleId        String?
+  examCycle          ExamCycle?         @relation(fields: [examCycleId], references: [id])
+  year               Int
+  shift              String? // e.g., "Shift 1 (9:00 AM - 10:00 AM)"
+  setSeries          String? // e.g., "Set A"
+  language           String             @default("en")
+  isMock             Boolean            @default(false)
+  isSectional        Boolean            @default(false)
+  sourceType         PaperSourceType    @default(OFFICIAL)
+  verificationStatus VerificationStatus @default(NEEDS_REVIEW)
+  durationMinutes    Int
+  totalMarks         Float
+  hasSectionalTiming Boolean            @default(false)
+  rawFileUrl         String?
+  uploaderId         String?
+  uploader           User?              @relation("UploadedPapers", fields: [uploaderId], references: [id])
+  sections           Section[]
+  answerKey          AnswerKey?
+  attempts           Attempt[]
+  parsingJob         ParsingJob?
+  takedownReports    TakedownReport[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([examId, year])
+}
+
+model Section {
+  id            String     @id @default(cuid())
+  paperId       String
+  paper         Paper      @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  name          String
+  orderIndex    Int
+  timeLimitMins Int? // Non-null when sectional timing applies (e.g., IBPS PO Prelims)
+  positiveMarks Float      @default(2.0)
+  negativeMarks Float      @default(0.5)
+  questions     Question[]
+}
+
+model Question {
+  id               String          @id @default(cuid())
+  sectionId        String
+  section          Section         @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  questionNumber   Int
+  type             QuestionType    @default(SINGLE_CHOICE)
+  text             String          @db.Text
+  textHindi        String?         @db.Text
+  imageUrl         String?
+  options          Json // Array of { id: "A"|"B"|"C"|"D", text: string, textHindi?: string }
+  correctOptionId  String?
+  correctOptionIds String[]        @default([])
+  correctNumericalAnswer Float?
+  numericalTolerance     Float?
+  explanation      String?         @db.Text
+  explanationHindi String?         @db.Text
+  subjectTag       String
+  topicTag         String
+  subtopicTag      String?
+  difficulty       DifficultyLevel @default(MODERATE)
+  marks            Float           @default(2.0)
+  negativeMarks    Float           @default(0.5)
+  sourceConfidence Float           @default(1.0) // 0.0 to 1.0 from Parser; <0.85 flagged for human review
+  needsHumanReview Boolean         @default(false)
+  responses        Response[]
+  issueReports     QuestionIssue[]
+
+  @@index([subjectTag, topicTag])
+}
+
+model AnswerKey {
+  id             String    @id @default(cuid())
+  paperId        String    @unique
+  paper          Paper     @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  officialPdfUrl String?
+  releasedAt     DateTime?
+  mappings       Json // { "1": "B", "2": "D", ... }
+  isFinal        Boolean   @default(true)
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  email              String?             @unique
+  passwordHash       String?
+  name               String              @default("Aspirant")
+  isGuest            Boolean             @default(false)
+  role               UserRole            @default(ASPIRANT)
+  reputationPoints   Int                 @default(0)
+  profile            Profile?
+  attempts           Attempt[]
+  uploadedPapers     Paper[]             @relation("UploadedPapers")
+  contributions      ContributionLog[]
+  analyticsSnapshots AnalyticsSnapshot[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+}
+
+model Profile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetExamSlugs   String[]
+  preferredLanguage String   @default("en")
+  stateDomicile     String?
+  dailyGoalMinutes  Int      @default(120)
+  publicLeaderboard Boolean  @default(false)
+}
+
+model Attempt {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paperId         String
+  paper           Paper          @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  startedAt       DateTime       @default(now())
+  submittedAt     DateTime?
+  isCompleted     Boolean        @default(false)
+  totalTimeSecs   Int            @default(0)
+  score           Float          @default(0)
+  maxScore        Float          @default(0)
+  accuracyPercent Float          @default(0)
+  percentile      Float?
+  sectionalScores Json? // { sectionId: { score, correct, incorrect, unattempted, timeSecs } }
+  responses        Response[]
+  proctorEvents    ProctorEvent[]
+
+  @@index([userId, paperId])
+}
+
+model Response {
+  id                 String   @id @default(cuid())
+  attemptId          String
+  attempt            Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId         String
+  question           Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOptionId   String?
+  selectedOptionIds  String[] @default([])
+  selectedNumericalAnswer Float?
+  status             String // NOT_VISITED, NOT_ANSWERED, ANSWERED, MARKED_FOR_REVIEW, ANSWERED_AND_MARKED
+  timeSpentSecs      Int      @default(0)
+  flaggedForReview   Boolean  @default(false)
+  changedAnswerCount Int      @default(0)
+  isCorrect          Boolean?
+  marksAwarded       Float    @default(0)
+
+  @@unique([attemptId, questionId])
+}
+
+model ProctorEvent {
+  id        String           @id @default(cuid())
+  attemptId String
+  attempt   Attempt          @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  type      ProctorEventType
+  timestamp DateTime         @default(now())
+  details   String? // Shown only to the user as a self-discipline training integrity note
+}
+
+model ParsingJob {
+  id                     String        @id @default(cuid())
+  paperId                String?       @unique
+  paper                  Paper?        @relation(fields: [paperId], references: [id])
+  uploaderId             String?
+  fileName               String
+  fileType               String // pdf, docx, md
+  rawFileStorageKey      String
+  status                 ParsingStatus @default(QUEUED)
+  llmProviderUsed        String        @default("ollama")
+  extractedQuestionCount Int           @default(0)
+  averageConfidence      Float         @default(0)
+  parsedDraftJson        Json? // ParsedPaperDraft structure awaiting human review
+  errorMessage           String?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+}
+
+model ContributionLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  actionType  String // UPLOAD_PAPER, VERIFY_QUESTION, FIX_ANSWER_KEY, SUBMIT_EXPLANATION
+  pointsDelta Int      @default(10)
+  referenceId String?
+  createdAt   DateTime @default(now())
+}
+
+model QuestionIssue {
+  id              String   @id @default(cuid())
+  questionId      String
+  question        Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  reporterId      String?
+  issueType       String // WRONG_ANSWER_KEY, TYPO_IN_QUESTION, MISSING_DIAGRAM, OUT_OF_SYLLABUS
+  suggestedOption String?
+  comment         String   @db.Text
+  upvotes         Int      @default(1)
+  isResolved      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
+
+model TakedownReport {
+  id             String   @id @default(cuid())
+  paperId        String
+  paper          Paper    @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  reporterEmail  String
+  reason         String   @db.Text
+  rightsAttested Boolean  @default(true)
+  status         String   @default("OPEN")
+  createdAt      DateTime @default(now())
+}
+
+model LearningTrick {
+  id           String          @id @default(cuid())
+  slug         String          @unique
+  title        String
+  subject      String
+  topic        String
+  examTags     String[]        @default([])
+  shortcut     String          @db.Text
+  explanation  String          @db.Text
+  example      String?         @db.Text
+  exampleHindi String?         @db.Text
+  mnemonic     String?
+  difficulty   DifficultyLevel @default(MODERATE)
+  accent       String          @default("brand")
+  sourceUrl    String?
+  sortOrder    Int             @default(0)
+  isPublished  Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([subject])
+  @@index([isPublished, sortOrder])
+}
+
+model AnalyticsSnapshot {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjectTag      String
+  topicTag        String
+  attemptsCount   Int      @default(0)
+  accuracyPercent Float    @default(0)
+  avgTimePerQSecs Float    @default(0)
+  masteryScore    Float    @default(0) // 0 to 100
+  computedAt      DateTime @default(now())
+
+  @@unique([userId, subjectTag, topicTag])
+}
+
+model IngestionSource {
+  id               String              @id @default(cuid())
+  slug             String              @unique
+  name             String
+  kind             IngestionSourceKind @default(OFFICIAL_HTML)
+  url              String
+  examSlug         String?
+  organizationSlug String?
+  enabled          Boolean             @default(true)
+  cadenceMinutes   Int                 @default(1440)
+  trustScore       Float               @default(0.7)
+  config           Json?
+  lastRunAt        DateTime?
+  nextRunAt        DateTime?
+  lastStatus       IngestionRunStatus?
+  runs             IngestionRun[]
+  knowledge        KnowledgeItem[]
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([enabled, nextRunAt])
+}
+
+model IngestionRun {
+  id           String             @id @default(cuid())
+  sourceId     String?
+  source       IngestionSource?   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  status       IngestionRunStatus @default(QUEUED)
+  providerUsed String             @default("heuristic")
+  startedAt    DateTime           @default(now())
+  finishedAt   DateTime?
+  httpStatus   Int?
+  fetchedUrl   String?
+  contentHash  String?
+  itemsFound   Int                @default(0)
+  itemsCreated Int                @default(0)
+  itemsUpdated Int                @default(0)
+  errorMessage String?            @db.Text
+  summary      String?            @db.Text
+  rawExcerpt   String?            @db.Text
+  knowledge    KnowledgeItem[]
+  createdAt    DateTime           @default(now())
+
+  @@index([sourceId, startedAt])
+  @@index([status, startedAt])
+}
+
+model KnowledgeItem {
+  id            String           @id @default(cuid())
+  slug          String           @unique
+  sourceId      String?
+  source        IngestionSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  runId         String?
+  run           IngestionRun?    @relation(fields: [runId], references: [id], onDelete: SetNull)
+  kind          KnowledgeKind
+  status        KnowledgeStatus  @default(DRAFT)
+  title         String
+  summary       String?          @db.Text
+  content       String           @db.Text
+  examSlug      String?
+  subject       String?
+  topic         String?
+  sourceUrl     String?
+  sourceName    String?
+  tags          String[]         @default([])
+  confidence    Float            @default(0.6)
+  extractedJson Json?
+  publishedAt   DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([status, kind])
+  @@index([examSlug])
+  @@index([runId])
+}

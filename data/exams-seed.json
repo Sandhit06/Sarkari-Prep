@@ -1,0 +1,418 @@
+{
+  "organizations": [
+    {
+      "slug": "ssc",
+      "name": "Staff Selection Commission",
+      "shortName": "SSC",
+      "websiteUrl": "https://ssc.gov.in",
+      "isStateBody": false,
+      "exams": [
+        {
+          "slug": "ssc-cgl",
+          "name": "SSC Combined Graduate Level (CGL)",
+          "shortName": "SSC CGL",
+          "category": "SSC",
+          "eligibility": "Bachelor's Degree in any discipline",
+          "ageLimit": "18\u201332 years",
+          "hasSectionalTiming": false,
+          "durationMins": 60,
+          "totalMarks": 200,
+          "negativeMark": 0.5
+        },
+        {
+          "slug": "ssc-chsl",
+          "name": "SSC Combined Higher Secondary Level (CHSL)",
+          "shortName": "SSC CHSL",
+          "category": "SSC",
+          "eligibility": "12th Standard (10+2) Pass",
+          "ageLimit": "18\u201327 years",
+          "hasSectionalTiming": false,
+          "durationMins": 60,
+          "totalMarks": 200,
+          "negativeMark": 0.5
+        },
+        {
+          "slug": "ssc-mts",
+          "name": "SSC Multi Tasking (Non-Technical) Staff",
+          "shortName": "SSC MTS",
+          "category": "SSC",
+          "eligibility": "10th Standard (Matriculation) Pass",
+          "ageLimit": "18\u201325/27 years",
+          "hasSectionalTiming": false,
+          "durationMins": 90,
+          "totalMarks": 270,
+          "negativeMark": 1.0
+        },
+        {
+          "slug": "ssc-gd",
+          "name": "SSC GD Constable (CAPFs, SSF, Rifleman)",
+          "shortName": "SSC GD",
+          "category": "SSC",
+          "eligibility": "10th Standard Pass + Physical Standards",
+          "ageLimit": "18\u201323 years",
+          "hasSectionalTiming": false,
+          "durationMins": 60,
+          "totalMarks": 160,
+          "negativeMark": 0.25
+        },
+        {
+          "slug": "ssc-cpo",
+          "name": "SSC Sub-Inspector in Delhi Police & CAPFs",
+          "shortName": "SSC CPO",
+          "category": "SSC",
+          "eligibility": "Bachelor's Degree + Physical Endurance",
+          "ageLimit": "20\u201325 years",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 200,
+          "negativeMark": 0.25
+        },
+        {
+          "slug": "ssc-je",
+          "name": "SSC Junior Engineer (Civil, Mechanical, Electrical)",
+          "shortName": "SSC JE",
+          "category": "SSC",
+          "eligibility": "Degree/Diploma in Engineering",
+          "ageLimit": "Up to 30/32 years",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 200,
+          "negativeMark": 0.25
+        }
+      ]
+    },
+    {
+      "slug": "upsc",
+      "name": "Union Public Service Commission",
+      "shortName": "UPSC",
+      "websiteUrl": "https://upsc.gov.in",
+      "isStateBody": false,
+      "exams": [
+        {
+          "slug": "upsc-cse",
+          "name": "UPSC Civil Services Examination (IAS/IPS/IFS)",
+          "shortName": "UPSC CSE",
+          "category": "UPSC",
+          "eligibility": "Bachelor's Degree from recognized university",
+          "ageLimit": "21\u201332 years (General)",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 200,
+          "negativeMark": 0.66
+        },
+        {
+          "slug": "upsc-cds",
+          "name": "UPSC Combined Defence Services (CDS)",
+          "shortName": "UPSC CDS",
+          "category": "DEFENCE",
+          "eligibility": "Graduation (IMA/INA/AFA/OTA)",
+          "ageLimit": "19\u201325 years",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 100,
+          "negativeMark": 0.33
+        },
+        {
+          "slug": "upsc-nda",
+          "name": "UPSC National Defence Academy & Naval Academy",
+          "shortName": "UPSC NDA",
+          "category": "DEFENCE",
+          "eligibility": "10+2 Pass (Physics & Maths for Air Force/Navy)",
+          "ageLimit": "16.5\u201319.5 years",
+          "hasSectionalTiming": false,
+          "durationMins": 300,
+          "totalMarks": 900,
+          "negativeMark": 0.83
+        },
+        {
+          "slug": "upsc-capf",
+          "name": "UPSC Central Armed Police Forces (Assistant Commandants)",
+          "shortName": "UPSC CAPF AC",
+          "category": "DEFENCE",
+          "eligibility": "Bachelor's Degree",
+          "ageLimit": "20\u201325 years",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 250,
+          "negativeMark": 0.66
+        }
+      ]
+    },
+    {
+      "slug": "ibps",
+      "name": "Institute of Banking Personnel Selection",
+      "shortName": "IBPS / SBI / RBI",
+      "websiteUrl": "https://ibps.in",
+      "isStateBody": false,
+      "exams": [
+        {
+          "slug": "ibps-po",
+          "name": "IBPS Probationary Officer / Management Trainee",
+          "shortName": "IBPS PO",
+          "category": "BANKING",
+          "eligibility": "Graduation in any discipline",
+          "ageLimit": "20\u201330 years",
+          "hasSectionalTiming": true,
+          "durationMins": 60,
+          "totalMarks": 100,
+          "negativeMark": 0.25
+        },
+        {
+          "slug": "sbi-po",
+          "name": "SBI Probationary Officer Recruitment",
+          "shortName": "SBI PO",
+          "category": "BANKING",
+          "eligibility": "Graduation in any discipline",
+          "ageLimit": "21\u201330 years",
+          "hasSectionalTiming": true,
+          "durationMins": 60,
+          "totalMarks": 100,
+          "negativeMark": 0.25
+        },
+        {
+          "slug": "sbi-clerk",
+          "name": "SBI Junior Associate (Customer Support & Sales)",
+          "shortName": "SBI Clerk",
+          "category": "BANKING",
+          "eligibility": "Graduation in any discipline",
+          "ageLimit": "20\u201328 years",
+          "hasSectionalTiming": true,
+          "durationMins": 60,
+          "totalMarks": 100,
+          "negativeMark": 0.25
+        },
+        {
+          "slug": "ibps-clerk",
+          "name": "IBPS Clerical Cadre (Customer Service Associate)",
+          "shortName": "IBPS Clerk",
+          "category": "BANKING",
+          "eligibility": "Graduation + Official Language Proficiency of State",
+          "ageLimit": "20\u201328 years",
+          "hasSectionalTiming": true,
+          "durationMins": 60,
+          "totalMarks": 100,
+          "negativeMark": 0.25
+        },
+        {
+          "slug": "rbi-grade-b",
+          "name": "RBI Grade B Officer (General / DEPR / DSIM)",
+          "shortName": "RBI Grade B",
+          "category": "BANKING",
+          "eligibility": "Graduation with 60% marks (50% for SC/ST/PwBD)",
+          "ageLimit": "21\u201330 years",
+          "hasSectionalTiming": true,
+          "durationMins": 120,
+          "totalMarks": 200,
+          "negativeMark": 0.25
+        }
+      ]
+    },
+    {
+      "slug": "rrb",
+      "name": "Railway Recruitment Board",
+      "shortName": "RRB",
+      "websiteUrl": "https://indianrailways.gov.in",
+      "isStateBody": false,
+      "exams": [
+        {
+          "slug": "rrb-ntpc",
+          "name": "RRB Non-Technical Popular Categories (Graduate & UG)",
+          "shortName": "RRB NTPC",
+          "category": "RAILWAYS",
+          "eligibility": "12th Pass (UG Posts) / Graduation (Graduate Posts)",
+          "ageLimit": "18\u201333/36 years",
+          "hasSectionalTiming": false,
+          "durationMins": 90,
+          "totalMarks": 100,
+          "negativeMark": 0.33
+        },
+        {
+          "slug": "rrb-group-d",
+          "name": "RRB Level-1 (Group D Track Maintainer / Pointsman)",
+          "shortName": "RRB Group D",
+          "category": "RAILWAYS",
+          "eligibility": "10th Pass or ITI from NCVT/SCVT",
+          "ageLimit": "18\u201333 years",
+          "hasSectionalTiming": false,
+          "durationMins": 90,
+          "totalMarks": 100,
+          "negativeMark": 0.33
+        },
+        {
+          "slug": "rrb-alp",
+          "name": "RRB Assistant Loco Pilot & Technician",
+          "shortName": "RRB ALP",
+          "category": "RAILWAYS",
+          "eligibility": "Matriculation + ITI / Diploma in Engineering",
+          "ageLimit": "18\u201330 years",
+          "hasSectionalTiming": false,
+          "durationMins": 60,
+          "totalMarks": 75,
+          "negativeMark": 0.33
+        }
+      ]
+    },
+    {
+      "slug": "cbse-ctet",
+      "name": "Central Board of Secondary Education (Teaching)",
+      "shortName": "CBSE / TET",
+      "websiteUrl": "https://ctet.nic.in",
+      "isStateBody": false,
+      "exams": [
+        {
+          "slug": "ctet-paper-1",
+          "name": "Central Teacher Eligibility Test (CTET Paper I & II)",
+          "shortName": "CTET",
+          "category": "TEACHING",
+          "eligibility": "D.El.Ed / B.Ed + Graduation/12th",
+          "ageLimit": "No upper age limit",
+          "hasSectionalTiming": false,
+          "durationMins": 150,
+          "totalMarks": 150,
+          "negativeMark": 0.0
+        },
+        {
+          "slug": "ctet-paper-2",
+          "name": "Central Teacher Eligibility Test (Paper II)",
+          "shortName": "CTET II",
+          "category": "TEACHING",
+          "eligibility": "B.Ed + Graduation",
+          "ageLimit": "No upper age limit",
+          "hasSectionalTiming": false,
+          "durationMins": 150,
+          "totalMarks": 150,
+          "negativeMark": 0.0
+        }
+      ]
+    },
+    {
+      "slug": "state-pscs",
+      "name": "State Public Service Commissions (WBPSC, UPPSC, BPSC, MPPSC, RPSC)",
+      "shortName": "State PSCs",
+      "websiteUrl": "https://psc.wb.gov.in",
+      "isStateBody": true,
+      "exams": [
+        {
+          "slug": "wbpsc-wbcs",
+          "name": "West Bengal Civil Service (Executive) Exam \u2014 WBCS",
+          "shortName": "WBPSC WBCS",
+          "category": "STATE_PSC",
+          "stateCode": "WB",
+          "eligibility": "Bachelor's Degree + Ability to read, write and speak Bengali",
+          "ageLimit": "21\u201336 years",
+          "hasSectionalTiming": false,
+          "durationMins": 150,
+          "totalMarks": 200,
+          "negativeMark": 0.33
+        },
+        {
+          "slug": "wbpsc-clerk",
+          "name": "West Bengal Clerkship Examination",
+          "shortName": "WBPSC Clerk",
+          "category": "STATE_PSC",
+          "stateCode": "WB",
+          "eligibility": "Bachelor's Degree",
+          "ageLimit": "18\u201340 years",
+          "hasSectionalTiming": false,
+          "durationMins": 90,
+          "totalMarks": 100,
+          "negativeMark": 0.25
+        },
+        {
+          "slug": "uppsc-pcs",
+          "name": "UPPSC Combined State / Upper Subordinate Services (UPPCS)",
+          "shortName": "UPPSC PCS",
+          "category": "STATE_PSC",
+          "stateCode": "UP",
+          "eligibility": "Bachelor's Degree",
+          "ageLimit": "21\u201340 years",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 200,
+          "negativeMark": 0.33
+        },
+        {
+          "slug": "bpsc-cce",
+          "name": "BPSC Integrated Combined Competitive Examination",
+          "shortName": "BPSC CCE",
+          "category": "STATE_PSC",
+          "stateCode": "BR",
+          "eligibility": "Bachelor's Degree",
+          "ageLimit": "20/21\u201337 years",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 150,
+          "negativeMark": 0.33
+        },
+        {
+          "slug": "mppsc-sse",
+          "name": "MPPSC State Service Examination",
+          "shortName": "MPPSC SSE",
+          "category": "STATE_PSC",
+          "stateCode": "MP",
+          "eligibility": "Bachelor's Degree",
+          "ageLimit": "21\u201340 years",
+          "hasSectionalTiming": false,
+          "durationMins": 120,
+          "totalMarks": 200,
+          "negativeMark": 0.0
+        },
+        {
+          "slug": "rpsc-ras",
+          "name": "RPSC Rajasthan Administrative Service (RAS/RTS)",
+          "shortName": "RPSC RAS",
+          "category": "STATE_PSC",
+          "stateCode": "RJ",
+          "eligibility": "Bachelor's Degree",
+          "ageLimit": "21\u201340 years",
+          "hasSectionalTiming": false,
+          "durationMins": 180,
+          "totalMarks": 200,
+          "negativeMark": 0.33
+        }
+      ]
+    },
+    {
+      "slug": "indian-army",
+      "name": "Indian Army",
+      "shortName": "Indian Army",
+      "websiteUrl": "https://joinindianarmy.nic.in",
+      "isStateBody": false,
+      "exams": [
+        {
+          "slug": "agniveer",
+          "name": "Agniveer General Duty",
+          "shortName": "Agniveer",
+          "category": "DEFENCE",
+          "eligibility": "10+2 Pass",
+          "ageLimit": "17.5\u201321 years",
+          "hasSectionalTiming": false,
+          "durationMins": 60,
+          "totalMarks": 100,
+          "negativeMark": 0.25
+        }
+      ]
+    },
+    {
+      "slug": "iit-gate",
+      "name": "Indian Institutes of Technology (GATE)",
+      "shortName": "IIT GATE",
+      "websiteUrl": "https://gate2026.iitg.ac.in",
+      "isStateBody": false,
+      "exams": [
+        {
+          "slug": "gate-cse",
+          "name": "GATE Computer Science & Information Technology",
+          "shortName": "GATE CSE",
+          "category": "ENGINEERING",
+          "eligibility": "Bachelor's degree in CSE/IT or related discipline",
+          "ageLimit": "No age limit",
+          "hasSectionalTiming": false,
+          "durationMins": 180,
+          "totalMarks": 100,
+          "negativeMark": 0.33
+        }
+      ]
+    }
+  ]
+}

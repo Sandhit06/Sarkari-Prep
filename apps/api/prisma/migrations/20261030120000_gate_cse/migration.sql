@@ -1,0 +1,9 @@
+ALTER TYPE "ExamCategory" ADD VALUE IF NOT EXISTS 'ENGINEERING';
+
+ALTER TABLE "Question" ALTER COLUMN "correctOptionId" DROP NOT NULL;
+ALTER TABLE "Question" ADD COLUMN "correctOptionIds" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];
+ALTER TABLE "Question" ADD COLUMN "correctNumericalAnswer" DOUBLE PRECISION;
+ALTER TABLE "Question" ADD COLUMN "numericalTolerance" DOUBLE PRECISION;
+
+ALTER TABLE "Response" ADD COLUMN "selectedOptionIds" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];
+ALTER TABLE "Response" ADD COLUMN "selectedNumericalAnswer" DOUBLE PRECISION;

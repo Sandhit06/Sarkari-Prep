@@ -1,0 +1,20 @@
+GNU AFFERO GENERAL PUBLIC LICENSE
+Version 3, 19 November 2007
+
+Copyright (c) 2026 SarkariPrep Contributors
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Why AGPL-3.0?
+SarkariPrep is built to remove coaching paywalls for Indian government exam aspirants.
+Under AGPL-3.0, any organization or individual who runs a modified version of SarkariPrep
+as a network/hosted service MUST also make the complete source code of their modified
+version freely available under AGPL-3.0. This prevents commercial coaching platforms
+from cloning this repository, closing the source, and placing public question papers
+behind a paywall.
+
+(Note: Maintainers may optionally dual-license or switch to MIT if maximum permissive
+remixing is preferred — see docs/decisions/001-tech-stack-and-license.md).

@@ -1,0 +1,81 @@
+[
+  {
+    "slug": "ssc-official-notices",
+    "name": "SSC Official Notices",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://ssc.gov.in/",
+    "organizationSlug": "ssc",
+    "cadenceMinutes": 360,
+    "trustScore": 0.95
+  },
+  {
+    "slug": "upsc-whats-new",
+    "name": "UPSC What's New",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://upsc.gov.in/whats-new",
+    "organizationSlug": "upsc",
+    "cadenceMinutes": 360,
+    "trustScore": 0.95
+  },
+  {
+    "slug": "ibps-official-notices",
+    "name": "IBPS Official Notices",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://www.ibps.in/",
+    "organizationSlug": "ibps",
+    "cadenceMinutes": 720,
+    "trustScore": 0.9
+  },
+  {
+    "slug": "rrb-official-notices",
+    "name": "Indian Railways Recruitment Notices",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://indianrailways.gov.in/",
+    "organizationSlug": "rrb",
+    "cadenceMinutes": 720,
+    "trustScore": 0.85
+  },
+  {
+    "slug": "ctet-official-notices",
+    "name": "CTET Official Notices",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://ctet.nic.in/",
+    "organizationSlug": "cbse-ctet",
+    "cadenceMinutes": 720,
+    "trustScore": 0.95
+  },
+  {
+    "slug": "wbpsc-official-notices",
+    "name": "WBPSC Official Notices",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://psc.wb.gov.in/",
+    "organizationSlug": "state-pscs",
+    "cadenceMinutes": 720,
+    "trustScore": 0.9
+  },
+  {
+    "slug": "indian-army-agniveer",
+    "name": "Indian Army Agniveer Updates",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://joinindianarmy.nic.in/",
+    "organizationSlug": "indian-army",
+    "cadenceMinutes": 1440,
+    "trustScore": 0.9
+  },
+  {
+    "slug": "rbi-official-notices",
+    "name": "RBI Official Notices",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://www.rbi.org.in/",
+    "cadenceMinutes": 720,
+    "trustScore": 0.9
+  },
+  {
+    "slug": "sbi-careers",
+    "name": "SBI Careers",
+    "kind": "OFFICIAL_HTML",
+    "url": "https://sbi.co.in/web/careers",
+    "cadenceMinutes": 720,
+    "trustScore": 0.9
+  }
+]

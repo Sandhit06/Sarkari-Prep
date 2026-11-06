@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sarkariprep
+      POSTGRES_PASSWORD: sarkariprep_secret
+      POSTGRES_DB: sarkariprep
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+      - ./apps/api/prisma/migrations/20261029000000_init/migration.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    volumes:
+      - miniodata_dev:/data
+
+volumes:
+  pgdata_dev:
+  miniodata_dev:

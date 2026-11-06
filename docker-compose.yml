@@ -1,0 +1,96 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sarkariprep-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sarkariprep}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sarkariprep_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-sarkariprep}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./apps/api/prisma/migrations/20261029000000_init/migration.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sarkariprep}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sarkariprep-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+  parser:
+    build:
+      context: ./apps/parser
+      dockerfile: Dockerfile
+    container_name: sarkariprep-parser
+    restart: unless-stopped
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    container_name: sarkariprep-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sarkariprep}:${POSTGRES_PASSWORD:-sarkariprep_secret}@postgres:5432/${POSTGRES_DB:-sarkariprep}?schema=public
+      REDIS_URL: redis://redis:6379/0
+      PARSER_SERVICE_URL: http://parser:8000
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_key}
+      INGESTION_AI_PROVIDER: ${INGESTION_AI_PROVIDER:-auto}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1:8b}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.0-flash}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-meta-llama/llama-3.1-8b-instruct:free}
+      INGESTION_SCHEDULER_ENABLED: ${INGESTION_SCHEDULER_ENABLED:-false}
+      INGESTION_SCHEDULER_INTERVAL_MS: ${INGESTION_SCHEDULER_INTERVAL_MS:-300000}
+      INGESTION_FETCH_TIMEOUT_MS: ${INGESTION_FETCH_TIMEOUT_MS:-25000}
+      INGESTION_AI_TIMEOUT_MS: ${INGESTION_AI_TIMEOUT_MS:-30000}
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      parser:
+        condition: service_started
+
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    container_name: sarkariprep-web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000/api/v1
+      NEXT_PUBLIC_WS_URL: ws://localhost:4000
+      NEXT_PUBLIC_APP_NAME: SarkariPrep
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  redisdata:

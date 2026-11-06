@@ -1,0 +1,22 @@
+**/node_modules
+**/.next
+**/.turbo
+**/dist
+**/build
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.venv
+**/.mypy_cache
+**/.ruff_cache
+.git
+.gitignore
+*.log
+
+# Never bake local secrets into an image
+.env
+.env.*
+!.env.example
+!.env.production.example
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
